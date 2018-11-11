@@ -27,24 +27,6 @@ import numpy as np
 import math
 
 
-#  a few HINTS to get you started:-
-#  
-# • Write a helper function that produces a sparse representation of the data (see Section 2.3.4 on feature engineering for details on how to do this).
-# 
-# 
-
-# It is recommended that you create a separate parsing function for each model that 
-# reads in the input .tsv file and 
-# outputs a label array and a feature array. 
-# 
-# Each feature (wt−1, wt, and wt+1) should use a "one-hot encoding scheme". 
-# In this scheme, each element of the feature (or label) represents a possible word (or label). All elements of the vector should be zero except for the element corresponding to the word assigned to the feature. 
-# 
-# For example, if the current word, wt, is “Boston”, and “Boston” corresponds to the ith element in our list of possible features, wt will be a vector with the ith position being 1 and everywhere else being 0. 
-# 
-# Alternatively, one can sparsely represent the feature value by making wt a 1-dimensional integer variable and assigning wt an index corresponding to the ith word in our list of possible features. This index could them be used to extract parameters from your model weight matrix. The labels can also be encoded using a similar format.
-
-# In[2]:
 
 
 #New
@@ -390,56 +372,39 @@ for i in range(k_N):  # iterating through training examples
 print(theta) 
 
 
-# In[ ]:
+#test
+def den_calc_p(x_i):
+    den_sum = 0.0 
+    for j in theta:
+        den_sum += np.exp(np.matmul(np.transpose(j), x_i))#theta[label_y_i.index(j)]), x_i)) # x_sup_i is ith eg in whole X        # numpy.transpose(a, axes=None) #numpy.matmul(a, b, out=None)
+        #print(den_sum)             # sigma j=1 to k exp((θ^j)^⊤ x^i) 
+    return den_sum
 
-
-# #test
-# def den_calc_p(x_i):
-#     den_sum = 0.0 
-#     for j in theta:
-#         den_sum += np.exp(np.matmul(np.transpose(j), x_i))#theta[label_y_i.index(j)]), x_i)) # x_sup_i is ith eg in whole X        # numpy.transpose(a, axes=None) #numpy.matmul(a, b, out=None)
-#         #print(den_sum)             # sigma j=1 to k exp((θ^j)^⊤ x^i) 
-#     return den_sum
-
-# feature_vectors_tb_A2, feature_set_x_i, label_y_i = create_table_A2()        
-# x_feature = []
-# y_label = []
-# with open('handout/toydata/toytest.tsv', 'r') as tsvfile2:
+feature_vectors_tb_A2, feature_set_x_i, label_y_i = create_table_A2()        
+x_feature = []
+y_label = []
+with open('handout/toydata/toytest.tsv', 'r') as tsvfile2:
         
-#         for line in tsvfile2:
+        for line in tsvfile2:
             
-#             row = line.split()
-#             count = 0
-#             if row:
-#                 x_feature.append(row[0])
-#                 index_x_feat = feature_set_x_i.index("cur:" + row[0] + " =1")
-# #                 temp = row[0]
-# #                 y_label.append(row[1])
+            row = line.split()
+            count = 0
+            if row:
+                x_feature.append(row[0])
+                index_x_feat = feature_set_x_i.index("cur:" + row[0] + " =1")
+#                 temp = row[0]
+#                 y_label.append(row[1])
                 
-#                 result_prob = 0.0      #label_prob_list = []
-#                 #for each test input:  # iterating through training examples
-#                 max_prob = -1.0
-#                 result_label = ""
-#                 print(feature_set_x_i[index_x_feat])
-#                 for j in label_y_i:   # gradient calculated for all k before updating any individual theta_sup_k
-#                     result_prob = (np.exp(np.matmul(np.transpose(theta[label_y_i.index(j)]), feature_vectors_tb_A2[index_x_feat])) / den_calc_p(feature_vectors_tb_A2[index_x_feat]))
+                result_prob = 0.0      #label_prob_list = []
+                #for each test input:  # iterating through training examples
+                max_prob = -1.0
+                result_label = ""
+                print(feature_set_x_i[index_x_feat])
+                for j in label_y_i:   # gradient calculated for all k before updating any individual theta_sup_k
+                    result_prob = (np.exp(np.matmul(np.transpose(theta[label_y_i.index(j)]), feature_vectors_tb_A2[index_x_feat])) / den_calc_p(feature_vectors_tb_A2[index_x_feat]))
 
-#                     if result_prob > max_prob:
-#                         max_prob = result_prob
-#                         result_label = ""
-#                         result_label = j
-#                 print(max_prob, result_label) 
-
-    
-
-
-# • Write a function that takes in a set of features, labels, and model parameters and then outputs the error (percentage of labels incorrectly predicted). You can also write a separate function that takes the same inputs and outputs the negative log-likelihood of the regression model.
-# 
-# • Be sure to handle boundary cases as specified in (see Section 2.3.4)
-
-# We have provided you with two subsets of the ATIS data set. Each one is divided into a training, a validation, and a test data set. The toy data set (toytrain.tsv, toyvalidation.tsv, and toytest.tsv) is a small data set that can be used while debugging your code. We have included the reference output files for this toy data set (see directory toyoutput/). We have also included a larger data set without reference outputs (train.csv, validation.csv, test.csv). This data set can be used to ensure that your code runs fast enough to pass the autograder tests. Your code should be able to perform one pass through all of the data in less than one minute for each of the models: one minute for Model 1 and one minute for Model 2.
-# 
-# 
-# 
-
-# The files are in tab-separated-value (.tsv) format. This is identical to a comma-separated-value (.csv) format except that instead of separating columns with commas, we separate them with a tab character, \t. Each row is ended by a Unix style line ending, \n. The first column always contains the word and the second column the tag.
+                    if result_prob > max_prob:
+                        max_prob = result_prob
+                        result_label = ""
+                        result_label = j
+                print(max_prob, result_label) 
